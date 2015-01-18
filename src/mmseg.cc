@@ -1,5 +1,9 @@
 #include "mmseg.h"
 
+css::SegmenterManager* psm_segmanager = NULL;
+css::Segmenter* ps_seg = NULL;
+std::vector<std::string>* pv_stopwords = NULL;
+
 /*******************************************************************************
  *
  *  Function mmseg_version
@@ -24,6 +28,25 @@ PHP_FUNCTION(mmseg_version) {
  *******************************************************************************/
 static PHP_MINIT_FUNCTION(mmseg) {
     REGISTER_INI_ENTRIES();
+
+	char* s_datadir = NULL;
+	char* s_stopwords = NULL;
+
+	if(cfg_get_string("mmseg.data_dir", &s_datadir) == SUCCESS &&
+		cfg_get_string("mmseg.stopwords", &s_stopwords) == SUCCESS) {
+		if(file_exists(s_datadir) && file_exists(s_stopwords)) {
+			psm_segmanager = new css::SegmenterManager();
+			psm_segmanager->init(s_datadir);
+
+			// Read stop words
+			pv_stopwords = new std::vector<std::string>();
+			std::ifstream _file(s_stopwords);
+			std::copy(std::istream_iterator<std::string>(_file),
+				std::istream_iterator<std::string>(),
+				std::back_inserter(*pv_stopwords));
+			std::sort(pv_stopwords->begin(),pv_stopwords->end());
+		}
+	}
     return SUCCESS;
 }
 
@@ -45,6 +68,11 @@ static PHP_MINFO_FUNCTION(mmseg) {
 
 static PHP_MSHUTDOWN_FUNCTION(mmseg) {
     UNREGISTER_INI_ENTRIES();
+	if(psm_segmanager) { // Delete the objects if we have really created them
+		delete psm_segmanager;
+		delete ps_seg;
+		delete pv_stopwords;
+	}
 	return SUCCESS;
 }
 

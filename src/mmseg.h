@@ -24,8 +24,17 @@ static PHP_MSHUTDOWN_FUNCTION(mmseg);
 
 PHP_INI_BEGIN()
 PHP_INI_ENTRY("mmseg.data_dir", "/usr/local/etc", PHP_INI_ALL, NULL)
-PHP_INI_ENTRY("mmseg.stopwords", "stopwords.txt", PHP_INI_ALL, NULL)
+PHP_INI_ENTRY("mmseg.stopwords", "/usr/local/etc/stopwords.txt", PHP_INI_ALL, NULL)
 PHP_INI_END()
+
+extern css::SegmenterManager* psm_segmanager;
+extern css::Segmenter* ps_seg; 
+extern std::vector<std::string>* stopwords;
+
+inline bool file_exists (const std::string& name) {
+    struct stat buffer;
+    return (stat (name.c_str(), &buffer) == 0);
+} 
 
 #define phpext_mmseg_ptr &mmseg_module_entry
 
