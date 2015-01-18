@@ -18,18 +18,31 @@
 #include "ext/standard/info.h"
 
 PHP_FUNCTION(mmseg_version);
+
+PHP_FUNCTION(mmseg_tokenize);
+ZEND_BEGIN_ARG_INFO(mmseg_tokenize, 0)
+    ZEND_ARG_INFO(0, str)
+    ZEND_ARG_INFO(0, result)
+ZEND_END_ARG_INFO();
+
+PHP_FUNCTION(mmseg_create_dict);
+ZEND_BEGIN_ARG_INFO(mmseg_create_dict, 0)
+    ZEND_ARG_INFO(0, input_file)
+    ZEND_ARG_INFO(0, output_file)
+ZEND_END_ARG_INFO();
+
 static PHP_MINIT_FUNCTION(mmseg);
 static PHP_MINFO_FUNCTION(mmseg);
 static PHP_MSHUTDOWN_FUNCTION(mmseg);
 
 PHP_INI_BEGIN()
 PHP_INI_ENTRY("mmseg.data_dir", "/usr/local/etc", PHP_INI_ALL, NULL)
-PHP_INI_ENTRY("mmseg.stopwords", "/usr/local/etc/stopwords.txt", PHP_INI_ALL, NULL)
+PHP_INI_ENTRY("mmseg.stopwords", "/usr/local/etc/stop_words.txt", PHP_INI_ALL, NULL)
 PHP_INI_END()
 
 extern css::SegmenterManager* psm_segmanager;
 extern css::Segmenter* ps_seg; 
-extern std::vector<std::string>* stopwords;
+extern std::vector<std::string>* pv_stopwords;
 
 inline bool file_exists (const std::string& name) {
     struct stat buffer;

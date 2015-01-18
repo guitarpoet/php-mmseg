@@ -33,5 +33,5 @@ if test "$PHP_MMSEG" != "no"; then
 	PHP_ADD_LIBRARY_WITH_PATH(mmseg, $LIBMMSEG_LD_DIR, LIBMMSEG_STATIC_LIBADD)
 	LDFLAGS="-lmmseg -lstdc++"
 	PHP_ADD_INCLUDE($LIBMMSEG_INCDIR)
-    PHP_NEW_EXTENSION(mmseg, src/mmseg.cc, $ext_shared,,"-Wno-c++11-compat-deprecated-writable-strings",yes)
+    PHP_NEW_EXTENSION(mmseg, src/mmseg.cc src/parser.cc, $ext_shared,,"-Wno-c++11-compat-deprecated-writable-strings",yes)
 fi
