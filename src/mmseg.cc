@@ -24,6 +24,57 @@ PHP_FUNCTION(mmseg_version) {
 
 /*******************************************************************************
  *
+ *  Function mmseg_synonyms
+ *
+ *  This function will generate the synonyms dictionary
+ *
+ *  @version 1.0
+ *
+ *******************************************************************************/
+PHP_FUNCTION(mmseg_synonyms) {
+	char* s_inputfile = NULL;
+	int inputfile_len = 0;
+	char* s_outfile = NULL;
+	int outfile_len = 0;
+	if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &s_inputfile, &inputfile_len,
+				&s_outfile, &outfile_len) == SUCCESS) {
+		if(file_exists(s_inputfile)) {
+			css::SynonymsDict dict;
+			dict.import(s_inputfile);
+			dict.save(s_outfile);
+			RETURN_TRUE;
+		}
+	}
+	RETURN_FALSE;
+}
+
+/*******************************************************************************
+ *
+ *  Function mmseg_thesaurus
+ *
+ *  This function will generate the thesaurus dictionary
+ *
+ *  @version 1.0
+ *
+ *******************************************************************************/
+PHP_FUNCTION(mmseg_thesaurus) {
+	char* s_inputfile = NULL;
+	int inputfile_len = 0;
+	char* s_outfile = NULL;
+	int outfile_len = 0;
+	if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &s_inputfile, &inputfile_len,
+				&s_outfile, &outfile_len) == SUCCESS) {
+		if(file_exists(s_inputfile)) {
+			css::ThesaurusDict tdict;
+			tdict.import(s_inputfile, s_outfile);    
+			RETURN_TRUE;
+		}
+	}
+	RETURN_FALSE;
+}
+
+/*******************************************************************************
+ *
  *  Function mmseg_create_dict
  *
  *  This function will create a new mmseg dict using the file name in the args
@@ -46,6 +97,7 @@ PHP_FUNCTION(mmseg_create_dict) {
 			css::UnigramDict ud;
 			int ret = ud.import(ur);
 			ud.save(s_outfile);
+			RETURN_TRUE;
 		}
 		else {
 			char buf[256];
@@ -171,6 +223,8 @@ static zend_function_entry mmseg_functions[] = {
     PHP_FE(mmseg_version, NULL)   
     PHP_FE(mmseg_tokenize, NULL)   
     PHP_FE(mmseg_create_dict, NULL)   
+    PHP_FE(mmseg_thesaurus, NULL)   
+    PHP_FE(mmseg_synonyms, NULL)   
 	PHP_FE_END
 };
   

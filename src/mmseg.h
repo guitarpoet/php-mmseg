@@ -31,6 +31,18 @@ ZEND_BEGIN_ARG_INFO(mmseg_create_dict, 0)
     ZEND_ARG_INFO(0, output_file)
 ZEND_END_ARG_INFO();
 
+PHP_FUNCTION(mmseg_thesaurus);
+ZEND_BEGIN_ARG_INFO(mmseg_thesaurus, 0)
+    ZEND_ARG_INFO(0, input_file)
+    ZEND_ARG_INFO(0, output_file)
+ZEND_END_ARG_INFO();
+
+PHP_FUNCTION(mmseg_synonyms);
+ZEND_BEGIN_ARG_INFO(mmseg_synonyms, 0)
+    ZEND_ARG_INFO(0, input_file)
+    ZEND_ARG_INFO(0, output_file)
+ZEND_END_ARG_INFO();
+
 static PHP_MINIT_FUNCTION(mmseg);
 static PHP_MINFO_FUNCTION(mmseg);
 static PHP_MSHUTDOWN_FUNCTION(mmseg);
