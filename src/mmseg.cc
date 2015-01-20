@@ -171,18 +171,20 @@ static PHP_MINIT_FUNCTION(mmseg) {
 
 	char* s_datadir = INI_STR("mmseg.data_dir");
 	char* s_stopwords = INI_STR("mmseg.stopwords");
-	if(file_exists(s_datadir) && file_exists(s_stopwords)) {
+	if(file_exists(s_datadir)) {
 		psm_segmanager = new css::SegmenterManager();
 		psm_segmanager->init(s_datadir);
 		ps_seg = psm_segmanager->getSegmenter();
 
 		// Read stop words
 		pv_stopwords = new std::vector<std::string>();
-		std::ifstream _file(s_stopwords);
-		std::copy(std::istream_iterator<std::string>(_file),
-			std::istream_iterator<std::string>(),
-			std::back_inserter(*pv_stopwords));
-		std::sort(pv_stopwords->begin(),pv_stopwords->end());
+		if(file_exists(s_stopwords)) {
+			std::ifstream _file(s_stopwords);
+			std::copy(std::istream_iterator<std::string>(_file),
+				std::istream_iterator<std::string>(),
+				std::back_inserter(*pv_stopwords));
+			std::sort(pv_stopwords->begin(),pv_stopwords->end());
+		}
 
 		pp_parser = new Parser();
 	}
